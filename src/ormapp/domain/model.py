@@ -47,6 +47,9 @@ class Entity(abc.ABC):
             raise ValueError("Not instance of Entity")
         return self._reference == other._reference
 
+    def __hash__(self):
+        return hash(self._reference)
+
     @hybrid_property
     def reference(self):
         return self._reference
@@ -73,6 +76,9 @@ class User(Entity):
 
     def __repr__(self):
         return f"<User(username={self._username})>"
+
+    def __hash__(self):
+        return super().__hash__()
 
     @hybrid_property
     def role(self):

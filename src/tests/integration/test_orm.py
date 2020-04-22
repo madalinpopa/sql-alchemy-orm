@@ -39,9 +39,9 @@ def test_orm_mapper_can_load_role(sqlite_session_factory):
     session = sqlite_session_factory()
     session.execute(
         "INSERT INTO roles (name) VALUES"
-        "('admin')"
+        "('vendor')"
     )
-    expected = [model.Role("admin")]
+    expected = [model.Role("vendor")]
     assert expected == session.query(model.Role).all()
 
 
@@ -50,9 +50,9 @@ def test_orm_can_save_a_role(sqlite_session_factory):
     Test if orm can save a role from entity.
     """
     session = sqlite_session_factory()
-    role = model.Role("admin")
+    role = model.Role("vendor")
     session.add(role)
     session.commit()
 
     rows = list(session.execute("SELECT name from roles"))
-    assert [("admin",)] == rows
+    assert [("vendor",)] == rows
