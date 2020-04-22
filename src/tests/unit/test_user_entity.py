@@ -40,6 +40,21 @@ class TestUserEntity:
         user.role = model.Role("admin")
         assert isinstance(user.role, model.Role)
 
+    def test_user_representation(self):
+        """
+        Test user representation.
+        """
+        user = model.User(reference="1", username="john", password="secret")
+        assert "<User(username=john)>" == repr(user)
+
+    def test_user_equality(self):
+        """
+        Test if two users are equal if the reference is the same.
+        """
+        user1 = model.User("1", "john", "secret")
+        user2 = model.User("1", "john", "secret")
+        assert user1 == user2
+
 
 class TestRoleValueObject:
     """
@@ -52,7 +67,7 @@ class TestRoleValueObject:
         """
         role = model.Role("admin")
         assert hasattr(role, "name")
-        assert hasattr(role, "user")
+        assert hasattr(role, "_user")
 
     def test_role_equality(self):
         """

@@ -42,6 +42,11 @@ class Entity(abc.ABC):
         self._reference = reference
         self._version = 0
 
+    def __eq__(self, other):
+        if not isinstance(other, Entity):
+            raise ValueError("Not instance of Entity")
+        return self._reference == other._reference
+
     @hybrid_property
     def reference(self):
         return self._reference
@@ -65,6 +70,9 @@ class User(Entity):
         self._username = username
         self._reference = reference
         self._role = None
+
+    def __repr__(self):
+        return f"<User(username={self._username})>"
 
     @hybrid_property
     def role(self):
