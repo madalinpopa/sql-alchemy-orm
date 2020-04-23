@@ -26,3 +26,33 @@ def test_uow_can_get_an_user(sqlite_session_factory):
     """
     Test to see if uow can get an user by reference.
     """
+    session = sqlite_session_factory()
+
+    session.execute(
+        "INSERT INTO users (reference, version, username, password) VALUES"
+        "('1', 1, 'steve', 'secret')"
+    )
+
+    uow = SqlUnitOfWork(session)
+    with uow:
+        user = uow.repo.get("1")
+        assert user is not None
+        assert "steve" == user.username
+
+
+def test_uow_role_saved_along_with_user(sqlite_session_factory):
+    """
+    Test if the role is saved along with the user.
+    """
+    session = sqlite_session_factory()
+    uow = SqlUnitOfWork(session)
+    user = model.User("1", "steve", "secret")
+    user.role = model.Role("admin")
+
+    with uow:
+        uow.repo.add(user)
+        uow.commit()
+
+    rows = list(session.execute("SELECT name FROM roles"))
+    expected = [('admin',)]
+    assert expected == rows
